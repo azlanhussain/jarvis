@@ -22,7 +22,7 @@ Supporting files:
 - `setup.py` and `setup.cfg` - install the `jarvis` command
 - `.env.example` - optional environment settings
 - `tests/` - unit tests for the Codex wrapper and notification helper
-- `AGENT.md` - project intent and current design notes
+- `AGENTS.md` - Codex repo guidance and project design notes
 
 ## Setup
 
@@ -39,6 +39,30 @@ cd /Users/adamputra/jarvis
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install --no-use-pep517 -e .
+```
+
+## Installing On Another Machine
+
+After cloning or pulling this repo on another machine, the source code will be present but the `jarvis` command will not exist until you install the package in that machine's Python environment.
+
+```bash
+cd /path/to/jarvis
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --no-use-pep517 -e .
+```
+
+That machine also needs:
+
+- Codex CLI installed
+- Codex CLI logged in and working
+- macOS `say` available for the spoken `Task completed` notification
+
+Then test:
+
+```bash
+jarvis --test-notify
+jarvis
 ```
 
 ## Run

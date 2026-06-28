@@ -31,6 +31,37 @@ User types into Jarvis
 - Keep Codex CLI responsible for model access, tools, sandboxing, and task execution.
 - Keep Jarvis small: text input, Codex handoff, final response print, completion notification.
 
+## Voice Modification History
+
+Jarvis can be modified to operate with voice, and this was already explored in this repo.
+
+Previous working/attempted voice pieces included:
+
+- microphone recording with `sounddevice`
+- press-Enter-to-start and press-Enter-to-stop recording
+- local speech-to-text with `faster-whisper`
+- English-only Whisper transcription via `language="en"`
+- OpenAI speech-to-text and text-to-speech before the project was changed to Codex-only
+- macOS `say` for spoken output
+
+The original Trillion/Jarvis reference design also allowed a higher-quality external voice stack:
+
+- Deepgram for speech-to-text
+- ElevenLabs for text-to-speech and custom voices
+
+That stack is not currently implemented in this repo. Adding it would require Deepgram and ElevenLabs API keys, and it should still keep Codex CLI as the agent brain unless the user explicitly asks to rebuild an independent assistant.
+
+Those voice-input paths were removed from the current app because local transcription was unreliable for the user. The current chosen design is text input only, plus a spoken `Task completed` notification.
+
+If the user asks to add voice again, useful implementation guidance:
+
+- Keep Codex CLI as the brain; do not rebuild an independent Jarvis model provider.
+- Reuse the prior architecture: record audio, transcribe to text, then send the transcript to the same Codex handoff path used by typed input.
+- Prefer a pluggable transcription backend so the user can choose `faster-whisper`, a shell command, or manual transcript fallback.
+- Force English transcription if using Whisper: pass `language="en"`.
+- Do not speak full Codex replies unless the user explicitly asks; the current preference is completion-only speech.
+- Keep a text-only path available as the default and fallback.
+
 ## Commands
 
 Install/update editable package:
@@ -38,6 +69,8 @@ Install/update editable package:
 ```bash
 python -m pip install --no-use-pep517 -e .
 ```
+
+When this repo is cloned or pulled on another machine, the `jarvis` command will not exist until the package is installed there. The other machine also needs Codex CLI installed and logged in, plus macOS `say` for completion speech.
 
 Run:
 
